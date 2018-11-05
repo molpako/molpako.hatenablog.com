@@ -1,6 +1,6 @@
 [@molpako](https://twitter.com/molpako) です！
 
-現在Pythonを勉強していて並行処理あたりが難しいと感じたので、Golangの並行処理と比較しながらまとめていきます。
+Pythonを勉強していて並行処理あたりが難しいと感じたので、Golangと比較しながらまとめていきます。
 
 **並行処理 (concurrency)**
 
@@ -256,27 +256,55 @@ print('Took %.3f seconds' % (time() - start))
 Took 4.885 seconds
 ```
 
-並列実行の場合の処理時間は約4.9秒！正直パフォーマンス的にもっと早くなるものかと思っていましたが、CPUバウンドな処理でも並列実行され時間が短縮できたのが確認できました。
+並列実行の場合の処理時間は約4.9秒！正直パフォーマンス的にもっと早くなるものかと思っていましたが、CPUバウンドな処理でも並列実行され時間が短縮できたのが確認できました。これは、多分、おそらく、予想ですが、プロセスはスレッドより重くオーバーヘッドがありメモリ使用量も多いからと考えられます。
 
-今の所、multiprocessingに対しての印象は
-- threadingにAPIが似ている
-- threadingと違ってマルチコア実行ができる。
+ちなみに、multiprocessingのPoolクラスを使用すると上記よりも少ないコード量でワーカープロセスのプールを制御し複数のプロセスを並列に動かすことができます。factorize()を使用して試してみましょう。
 
-だけですが、他にも
-
-xxx Pool についてかく。
-
+```python
+def call_factorize(number):
+    """ジェネレーターを呼ぶための関数"""
+    return list(factorize(number))
 
 
+start = time()
 
-### concurrent
+# 計算する要素分プロセスを立ち上げる
+with multiprocessing.Pool(len(numbers)) as pool:
+    results = pool.map(call_factorize, numbers)
+
+    for result in results:
+        print(result)
+
+print('Took %.3f seconds' % (time() - start))
+
+>>>
+[1, 5501, 9733, 53541233]
+[1, 21235343]
+[1, 11, 383, 2711, 4213, 29821, 1038313, 11421443]
+[1, 5423123]
+Took 5.252 seconds
+```
+
+
+#### まとめ
+
+- start()やjoin()などthreadingとAPIが似ている。（ので、移行がしやすい）
+- threadingと違い、マルチコア実行ができる。
+- Poolクラスにより複数プロセスの管理が簡単になる。
 
 ### queue
 
-threadingモジュールとmultiprocessingモジュールにもQueueクラスは提供されていますが、queueモジュールというものあってそれにもQueueクラスがあります。。。
+threadingモジュールとmultiprocessingモジュールにもQueueクラスは提供されていますが、queueモジュールというものあってそれにもQueueクラスがあります。。。
+// スレッドやプロセス間のデータの受け渡しを主にかく。
+
+### concurrent
+
+// 勉強中
+
 
 ### asyncio
 
+// 勉強中
 
 ## 参考文献
 
