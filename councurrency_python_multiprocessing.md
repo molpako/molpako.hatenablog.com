@@ -1,7 +1,15 @@
+[@molpako](https://twitter.com/molpako) です！
 
-### multiprocessing
+Pythonを勉強していて並行処理あたりが難しいと感じたので、Golangと比較しながらまとめていきます。
 
-multiprocessingのサンプルコードをみると start() や join() というメソッドがあるしthreadingと同じじゃん！マルチスレッドとマルチプロセスはどっちを使えばいいんだ！と感じましたが、ドキュメントをみると答えが書いてありました。multiprocessingモジュールの目的は **並列処理** ということです。threadingのところで説明しましたが、PythonはGILという仕組みがあって、それがスレッドを同時に一つのスレッドしか動かさないようにしています。multiprocessingはその問題を解決するモジュールらしく、名の通り複数のプロセスを使いマルチコアの恩恵を受け、並列処理ができるみたいです。早速CPUバウンドな処理を並列にして高速化してみましょう。まずは、順番に実行します。
+[前回](https://molpako.hatenablog.com/entry/2018/11/05/235541) では、threadingモジュールを勉強しました。
+今回は、multiprocessingを勉強していきます！
+
+## multiprocessing
+
+multiprocessingのサンプルコードをみると start() や join() というメソッドがあるしthreadingと同じじゃん！マルチスレッドとマルチプロセスはどっちを使えばいいんだ！と感じましたが、ドキュメントをみると答えが書いてありました。multiprocessingモジュールの目的は **並列処理** ということです。
+
+threadingのところで説明しましたが、PythonはGILという仕組みがあって、それがスレッドを同時に一つのスレッドしか動かさないようにしています。multiprocessingはその問題を解決するモジュールらしく、名の通り複数のプロセスを使いマルチコアの恩恵を受け、並列処理ができるみたいです。早速CPUバウンドな処理を並列にして高速化してみましょう。まずは、順番に実行します。
 
 ```python
 def factorize(number):
@@ -83,8 +91,7 @@ print('Took %.3f seconds' % (time() - start))
 Took 5.252 seconds
 ```
 
-
-#### まとめ
+## まとめ
 
 - start()やjoin()などthreadingとAPIが似ている。（ので、移行がしやすい）
 - threadingと違い、マルチコア実行ができる。
